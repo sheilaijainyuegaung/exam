@@ -1,0 +1,48 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.claude/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Backend runtime/output
+backend/.venv/
+backend/storage/
+backend/tmp/
+backend/tmp_docs/
+backend/tmp_case_results/
+backend/_manual/
+backend/_manual_full/
+backend/.pytest_cache/
+backend/*.log
+
+# Frontend runtime/output
+前端项目源码（原来技术）/node_modules/
+前端项目源码（原来技术）/dist/
+Exam(1)/node_modules/
+Exam(1)/dist/
+
+# Local data / generated artifacts
+tmp/
+测试结果/
+structure_*.json
+*.tmp
+
+# Keep config templates only
+!.env.example
