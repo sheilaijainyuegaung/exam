@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://49.234.206.243:8001";
+const API_BASE_URL = "http://47.106.32.222:8001";
 
 async function request(path, options = {}) {
   const res = await fetch(`${API_BASE_URL}${path}`, options);
@@ -44,6 +44,12 @@ export async function listRecognitionTasks(limit = 100, offset = 0) {
   const safeLimit = Number.isFinite(Number(limit)) ? Number(limit) : 100;
   const safeOffset = Number.isFinite(Number(offset)) ? Number(offset) : 0;
   return request(`/api/v1/recognitions/tasks?limit=${safeLimit}&offset=${safeOffset}`);
+}
+
+export async function clearRecognitionTasks() {
+  return request("/api/v1/recognitions/tasks", {
+    method: "DELETE",
+  });
 }
 
 export async function listRuleProfiles() {

@@ -48,18 +48,20 @@ if errorlevel 1 (
 if not defined DATABASE_URL set "DATABASE_URL=mysql+pymysql://root:root@127.0.0.1:3306/exam_recognition?charset=utf8mb4"
 if not defined LIBREOFFICE_CMD set "LIBREOFFICE_CMD=soffice"
 
+set "BACKEND_CMD=python -m uvicorn app.main:app --host 0.0.0.0 --port 8001"
+
 if "%CHECK_ONLY%"=="1" (
   echo [CHECK] OK
   echo [CHECK] ROOT_DIR=%ROOT_DIR%
   echo [CHECK] BACKEND_DIR=%BACKEND_DIR%
   echo [CHECK] FRONTEND_DIR=%FRONTEND_DIR%
-  echo [CHECK] Backend command: python -m uvicorn app.main:app --host 0.0.0.0 --port 8001
+  echo [CHECK] Backend command: %BACKEND_CMD%
   echo [CHECK] Frontend command: npm run serve
   exit /b 0
 )
 
 echo [INFO] Starting backend in a new CMD window...
-start "Exam Backend :8001" "%ComSpec%" /k "cd /d ""%BACKEND_DIR%"" && python -m uvicorn app.main:app --host 0.0.0.0 --port 8001"
+start "Exam Backend :8001" "%ComSpec%" /k "cd /d ""%BACKEND_DIR%"" && %BACKEND_CMD%"
 
 echo [INFO] Starting frontend in a new CMD window...
 start "Exam Frontend :8080" "%ComSpec%" /k "cd /d ""%FRONTEND_DIR%"" && npm run serve"

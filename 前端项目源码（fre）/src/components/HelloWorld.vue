@@ -5,6 +5,7 @@
         @task-created="onTaskCreated"
         @task-failed="onTaskFailed"
         @task-finished="onTaskFinished"
+        @task-list-cleared="onTaskListCleared"
       />
 
       <div class="meta-card">
@@ -55,7 +56,7 @@
 
 <script>
 import RecognitionUploader from "@/components/RecognitionUploader.vue";
-import TopicTemp from "../../../Exam(1)/TopicTemp2.vue";
+import TopicTemp from "@/components/score-tree/TopicTemp2.vue";
 import { apiBaseUrl } from "@/services/recognitionApi";
 
 export default {
@@ -80,6 +81,17 @@ export default {
     onTaskFailed(payload) {
       const msg = payload && payload.errorMessage ? payload.errorMessage : "任务失败";
       this.detailSymbolPreview = msg;
+    },
+    onTaskListCleared() {
+      this.listImg = [];
+      this.answImg = [];
+      this.title = "";
+      this.currentTaskId = "";
+      this.detailSymbolPreview = "-";
+      this.exportPayload = null;
+      if (this.$refs.refTopic && typeof this.$refs.refTopic.setTemp2 === "function") {
+        this.$refs.refTopic.setTemp2(1, []);
+      }
     },
     onTaskFinished(payload) {
       const { taskId, result, details } = payload;

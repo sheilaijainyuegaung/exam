@@ -39,6 +39,10 @@ class TaskListResponse(BaseModel):
     offset: int
 
 
+class ClearTasksResponse(BaseModel):
+    deletedTaskCount: int
+
+
 class ScoresNode(BaseModel):
     numbering: str = ""
     rawText: str = ""

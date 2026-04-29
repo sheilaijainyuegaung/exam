@@ -47,9 +47,14 @@
 
     <div class="history-header">
       <span>提取记录</span>
-      <button class="refresh-btn" :disabled="loadingHistory" @click="refreshTaskHistory">
-        {{ loadingHistory ? "刷新中..." : "刷新" }}
-      </button>
+      <div class="history-actions">
+        <button class="clear-btn" :disabled="loadingHistory || clearingHistory" @click="clearTaskHistory">
+          {{ clearingHistory ? "清空中..." : "清空任务列表" }}
+        </button>
+        <button class="refresh-btn" :disabled="loadingHistory || clearingHistory" @click="refreshTaskHistory">
+          {{ loadingHistory ? "刷新中..." : "刷新" }}
+        </button>
+      </div>
     </div>
 
     <div v-if="historyItems.length === 0" class="empty">暂无提取记录</div>
@@ -104,6 +109,7 @@
 
 <script>
 import {
+  clearRecognitionTasks,
   getTaskDetails,
   getTaskResult,
   getTaskStatus,
@@ -183,6 +189,7 @@ export default {
       pollInFlightMap: {},
       historyItems: [],
       loadingHistory: false,
+      clearingHistory: false,
       viewingTaskId: null,
       showLayoutModal: false,
       layoutFieldDefs: LAYOUT_FIELD_DEFS,
@@ -307,6 +314,32 @@ export default {
         this.errorMessage = err.message || "提取记录加载失败";
       } finally {
         this.loadingHistory = false;
+      }
+    },
+    resetTaskHistoryState() {
+      Object.values(this.pollerMap).forEach((timer) => clearInterval(timer));
+      this.pollerMap = {};
+      this.pollInFlightMap = {};
+      this.historyItems = [];
+      this.taskIds = [];
+      this.taskStateMap = {};
+      this.viewingTaskId = null;
+    },
+    async clearTaskHistory() {
+      if (this.loadingHistory || this.clearingHistory) return;
+      if (!window.confirm("确认清空任务列表吗？这会删除当前提取记录。")) {
+        return;
+      }
+      this.clearingHistory = true;
+      this.errorMessage = "";
+      try {
+        await clearRecognitionTasks();
+        this.resetTaskHistoryState();
+        this.$emit("task-list-cleared");
+      } catch (err) {
+        this.errorMessage = err.message || "清空任务列表失败";
+      } finally {
+        this.clearingHistory = false;
       }
     },
     onFileChange(event) {
@@ -508,6 +541,22 @@ export default {
   font-weight: 600;
 }
 
+.history-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.clear-btn {
+  border: 1px solid #f56c6c;
+  border-radius: 4px;
+  height: 28px;
+  padding: 0 10px;
+  background: #fff5f5;
+  color: #f56c6c;
+  cursor: pointer;
+}
+
 .refresh-btn {
   border: 1px solid #dcdfe6;
   border-radius: 4px;
@@ -518,6 +567,7 @@ export default {
   cursor: pointer;
 }
 
+.clear-btn:disabled,
 .refresh-btn:disabled {
   cursor: not-allowed;
   opacity: 0.6;

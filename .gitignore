@@ -33,8 +33,8 @@ backend/.pytest_cache/
 backend/*.log
 
 # Frontend runtime/output
-前端项目源码（原来技术）/node_modules/
-前端项目源码（原来技术）/dist/
+前端项目源码（fre）/node_modules/
+前端项目源码（fre）/dist/
 Exam(1)/node_modules/
 Exam(1)/dist/
 

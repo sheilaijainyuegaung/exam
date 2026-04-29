@@ -30,11 +30,23 @@ Windows:
 .\scripts\run_windows.ps1
 ```
 
+Disable reload if needed:
+
+```powershell
+.\scripts\run_windows.ps1 --no-reload
+```
+
 Linux:
 
 ```bash
 chmod +x ./scripts/run_linux.sh
 ./scripts/run_linux.sh
+```
+
+Disable reload if needed:
+
+```bash
+BACKEND_RELOAD=0 ./scripts/run_linux.sh
 ```
 
 Service URL: `http://127.0.0.1:8001`

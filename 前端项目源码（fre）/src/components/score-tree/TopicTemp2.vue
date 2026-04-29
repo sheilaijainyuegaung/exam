@@ -30,7 +30,7 @@
         <div>
           <button @click="delNode(node)">减子级</button>
         </div>
-        <div  class="select-box">
+        <div class="select-box">
           <select v-model="config.type" class="select">
             <option :value="1">1模板</option>
             <option :value="2">2模板</option>
@@ -38,7 +38,7 @@
             <option :value="4">4模板</option>
           </select>
         </div>
-        <div  class="select-box" v-if="isHasChild()">
+        <div class="select-box" v-if="isHasChild()">
           <select v-model="node.type" class="select">
             <option :value="1">序号</option>
             <option :value="2">划线</option>
@@ -50,97 +50,95 @@
 </template>
 
 <script>
-import ScoreNode from './Temp.vue'
-import {calcTotalScore, isLevel3} from "./temp";
+import ScoreNode from "./Temp.vue";
+import { calcTotalScore, isLevel3 } from "./temp";
 
 export default {
-  components: {ScoreNode},
-  data(){
+  components: { ScoreNode },
+  data() {
     return {
-      node:undefined,//当前选择的节点
-      parent:undefined,//当前节点的父节点
-      selId:"",//选中的id
-      list:[],//源数据
-      config:{type:1},//配置
-      mateTempType:1,//由于安卓部分需要567,这里临时保存。
-      autoType:1,//如果和config.type不一样。否则就返回config.type。因为config.type可以被修改
-    }
+      node: undefined,
+      parent: undefined,
+      selId: "",
+      list: [],
+      config: { type: 1 },
+      mateTempType: 1,
+      autoType: 1,
+    };
   },
   methods: {
     isLevel3,
     calcTotalScore,
-    isHasChild(){
-      // 在选中节点的情况判断是否有子级
-      return this.selId !== "" && this.node.childScores && this.node.childScores.length > 0
+    isHasChild() {
+      return this.selId !== "" && this.node.childScores && this.node.childScores.length > 0;
     },
-    setData(list,tType){
+    setData(list, tType) {
       let type = tType;
       if (tType === 5) {
-        type = 2
-      } else if (tType === 6) { //不带序号
-        type = 3
-      } else if (tType === 7) { //带序号
-        type = 4
+        type = 2;
+      } else if (tType === 6) {
+        type = 3;
+      } else if (tType === 7) {
+        type = 4;
       }
-      this.list = list
-      this.config.type = type
+      this.list = list;
+      this.config.type = type;
       this.mateTempType = tType;
       this.autoType = type;
-      console.log("源数据:",list,type)
+      console.log("源数据:", list, type);
     },
-    setTemp2(type,list){ // 兼容方法
-      this.setData(list,type)
+    setTemp2(type, list) {
+      this.setData(list, type);
     },
-    getType(){ //这里返回的是js中提取结构的类型
+    getType() {
       if (this.autoType === this.config.type) {
-        return this.mateTempType
+        return this.mateTempType;
       }
-      return this.config.type
+      return this.config.type;
     },
-    getList(){
-      return this.list
+    getList() {
+      return this.list;
     },
     getPrevChildSum(index) {
-      let sum = this.list
-        .slice(0, index)
-        .reduce((sum, p) => sum + (p.childScores?.length || 0), 0)
-      console.log("同级所有子和:",sum,index)
-      return sum
+      let sum = this.list.slice(0, index).reduce((sum, p) => sum + (p.childScores?.length || 0), 0);
+      console.log("同级所有子和:", sum, index);
+      return sum;
     },
-    onSelItem(item,parent,selId){
-      this.node = item
-      if (this.node.type == null) { // 优化变成响应式
-        this.$set(this.node,"type",1)
+    onSelItem(item, parent, selId) {
+      this.node = item;
+      if (this.node.type == null) {
+        this.$set(this.node, "type", 1);
       }
-      this.parent = parent
-      this.selId = selId
-      console.log("数据功能:",item,parent,selId)
+      this.parent = parent;
+      this.selId = selId;
+      console.log("数据功能:", item, parent, selId);
     },
-    addNode(node){
-      if(this.selId === "" || node === undefined){
+    addNode(node) {
+      if (this.selId === "" || node === undefined) {
         this.list.push({
           score: 0,
           childScores: [],
-        })
+        });
         return;
       }
-      node.childScores ??= []
+      node.childScores ??= [];
       node.childScores.push({
         score: 0,
         childScores: [],
-      })
+      });
     },
-    delNode(node){
-      if(this.selId === "" || node === undefined){
-        this.list.pop()
+    delNode(node) {
+      if (this.selId === "" || node === undefined) {
+        this.list.pop();
         return;
       }
-      node.childScores ??= []
-      node.childScores.pop()
+      node.childScores ??= [];
+      node.childScores.pop();
     },
-  }
-}
+  },
+};
 </script>
+
 <style scoped lang="scss">
 .score-tree {
   display: flex;
@@ -154,7 +152,7 @@ export default {
   background: beige;
 }
 
-.layout{
+.layout {
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -165,14 +163,13 @@ export default {
   div {
     margin-top: 4px;
   }
-  /* 基础按钮样式 */
   button {
-    background-color: #4a90e2; /* 蓝色背景 */
-    color: #fff; /* 白色文字 */
-    border: none; /* 去掉默认边框 */
-    padding: 8px 16px; /* 内边距 */
+    background-color: #4a90e2;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
     font-weight: 500;
-    border-radius: 6px; /* 圆角 */
+    border-radius: 6px;
     cursor: pointer;
   }
 }
@@ -192,7 +189,7 @@ export default {
   .select:focus {
     outline: none;
     border-color: #409eff;
-    box-shadow: 0 0 4px rgba(64,158,255,.4);
+    box-shadow: 0 0 4px rgba(64, 158, 255, 0.4);
   }
 }
 </style>
